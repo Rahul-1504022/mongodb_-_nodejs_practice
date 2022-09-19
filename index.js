@@ -32,23 +32,23 @@ const Student = mongoose.model('Student', studentSchema);//class
 //ready
 const student = new Student(
     {
-        firstName: "Kabir",
-        lastName: "Said",
-        dob: new Date("21 September 1995"),
+        firstName: "Kashem",
+        lastName: "Hossen",
+        dob: new Date("25 March 1987"),
         passed: true,
-        hobbies: ["Playing", "Hiking"],
+        hobbies: ["Reading", "Writing"],
         parents: {
-            father: "K",
-            mother: "D",
+            father: "S",
+            mother: "T",
         },
         subjects: [
             {
                 name: "Math",
-                marks: 79,
+                marks: 89,
             },
             {
                 name: "English",
-                marks: 63,
+                marks: 88,
             }
         ]
     }
@@ -59,12 +59,52 @@ const student = new Student(
 //     .then(data => console.log(data))
 //     .catch(error => console.log(error));
 
+//Create a new Entry
 async function saveStudent() {
     try {
-        const savedata = await student.save();
-        console.log(savedata);
+        const saveData = await student.save();
+        console.log(saveData);
     } catch (error) {
         console.log(error.message);
     }
 }
-saveStudent();
+// saveStudent();
+
+//Read from Collection
+async function readStudent() {
+    try {
+        const readData = await Student
+            .find()
+            .select({ firstName: 1, lastName: 1, passed: 1 });
+        console.log(readData);
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+// readStudent();
+
+//Update Collection
+async function updateStudent(id) {
+    try {
+        const student = await Student.updateOne({ _id: id }, {
+            $set: {
+                passed: false
+            }
+        })
+        console.log(student);
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+// updateStudent("632210063696972c6d4f3caf");
+
+//Delete from Collection
+async function deleteStudent(id) {
+    try {
+        const student = await Student.deleteOne({ _id: id })
+        console.log(student);
+    } catch (error) {
+        console.log(error.message);
+    }
+}
+// deleteStudent("632210063696972c6d4f3caf");
