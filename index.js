@@ -8,9 +8,14 @@ mongoose.connect('mongodb://localhost:27017/my-students')
 //schema => defines the shape of document
 const studentSchema = new mongoose.Schema(
     {
-        firstName: { type: String },
+        firstName: { type: String, required: true },
         lastName: String,
-        dob: Date,
+        dob: {
+            type: Date, validate: {
+                validator: (value) => value > new Date("1 January 1980"),
+                message: "Date must be after 1 January 1980"
+            }
+        },
         entryDate: { type: Date, default: Date.now },
         passed: Boolean,
         hobbies: [String],
@@ -30,29 +35,65 @@ const studentSchema = new mongoose.Schema(
 //Model
 const Student = mongoose.model('Student', studentSchema);//class
 //ready
-const student = new Student(
-    {
-        firstName: "Kashem",
-        lastName: "Hossen",
-        dob: new Date("25 March 1987"),
-        passed: true,
-        hobbies: ["Reading", "Writing"],
-        parents: {
-            father: "S",
-            mother: "T",
-        },
-        subjects: [
+// const student = new Student(
+//     {
+//         firstName: "Kashem",
+//         lastName: "Hossen",
+//         dob: new Date("25 March 1987"),
+//         passed: true,
+//         hobbies: ["Reading", "Writing"],
+//         parents: {
+//             father: "S",
+//             mother: "T",
+//         },
+//         subjects: [
+//             {
+//                 name: "Math",
+//                 marks: 89,
+//             },
+//             {
+//                 name: "English",
+//                 marks: 88,
+//             }
+//         ]
+//     }
+// );
+
+//create student data using create function
+async function createStudent() {
+    try {
+        const data = await Student.create(
+
             {
-                name: "Math",
-                marks: 89,
-            },
-            {
-                name: "English",
-                marks: 88,
+                firstName: "Javed",
+                lastName: "Omar",
+                dob: new Date("25 March 1987"),
+                passed: true,
+                hobbies: ["Reading", "Writing"],
+                parents: {
+                    father: "S",
+                    mother: "T",
+                },
+                subjects: [
+                    {
+                        name: "Math",
+                        marks: 89,
+                    },
+                    {
+                        name: "English",
+                        marks: 88,
+                    }
+                ]
             }
-        ]
+        );
+        console.log(data);
+    } catch (error) {
+        console.log(error.message);
     }
-);
+
+}
+createStudent();
+
 
 //save student object to shema
 // student.save()//return promise
